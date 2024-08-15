@@ -11,20 +11,19 @@ import { v4 as uuidv4 } from 'uuid';
 
 const FileUpload = () => {
     const [uploading, setUploading] = useState(false);
-
+    const [storeUrl, setStoreUrl] = useState("");
 
     const { mutate, isPending } = useMutation({
         mutationFn: async ({
-            file_key,
-            file_name,
+            storeUrl
         }: {
-            file_key: string;
-            file_name: string;
+            storeUrl: string;
         }) => {
             const response = await axios.post("/api/create-chat", {
-                file_key,
-                file_name,
+                storeUrl
             });
+
+            console.log(response.data)
 
             return response.data;
         },
@@ -51,50 +50,35 @@ const FileUpload = () => {
                     "state_changed",
                     (snapshot: UploadTaskSnapshot) => {
                         const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        // You can use this progress value to update a progress bar if needed
                     },
                     (error) => {
                         console.error("Upload failed:", error);
                         toast.error("Upload failed. Please try again.");
                         setUploading(false);
                     },
-
                 );
-                //for download link 
-                async () => {
-                    getDownloadURL(ref(storage, `pdf/${file_key}_${file.name}`))
-                        .then((url) => {
-                            const xhr = new XMLHttpRequest();
-                            xhr.responseType = "blob";
-                            xhr.onload = () => {
-                                const blob = xhr.response;
-                                console.log("File fetched via XMLHttpRequest:", blob);
-                            };
-                            xhr.open("GET", url);
-                            xhr.send();
 
-                            console.log(url);
+                await uploadTask;
 
-                            toast.success("File uploaded successfully!");
-                        })
-                        .catch((error) => {
-                            console.error("Error fetching download URL:", error);
-                            toast.error("Failed to retrieve the file URL.");
-                        })
-                        .finally(() => {
-                            setUploading(false);
-                        });
-                }
+                const url = await getDownloadURL(ref(storage, `pdf/${file_key}_${file.name}`));
+                console.log(url);
+                setStoreUrl(url);
+                console.log(storeUrl);
 
-                //muatttion
+                toast.success("File uploaded successfully!");
+
                 if (!file.name || !file_key) {
-                    toast("Something went wrong");
+                    toast("Something went wrong in fileupload");
                     return;
                 }
 
+                // Now that we have the URL, we can call mutate
                 mutate(
-                    { file_key, file_name: file.name },
+                    { storeUrl: url },  // Use the URL directly instead of the state
                     {
                         onSuccess: ({ data }) => {
+                            console.log(data)
                             toast.success("Chat created!");
                         },
                         onError: (err) => {
@@ -104,14 +88,10 @@ const FileUpload = () => {
                     }
                 );
 
-
-
             } catch (error) {
                 console.error("Error during file upload:", error);
                 toast.error("An error occurred. Please try again.");
-                setUploading(false);
-            }
-            finally {
+            } finally {
                 setUploading(false);
             }
         },
@@ -128,7 +108,6 @@ const FileUpload = () => {
                 <input {...getInputProps()} />
                 {uploading || isPending ? (
                     <>
-                        {/* loading state */}
                         <Loader2 className="h-10 w-10 text-blue-500 animate-spin" />
                         <p className="mt-2 text-sm text-slate-400">
                             Spilling Tea to GPT...
@@ -140,9 +119,7 @@ const FileUpload = () => {
                         <p className="mt-2 text-sm text-slate-400">Drop PDF Here</p>
                     </>
                 )}
-
             </div>
-
         </div>
     );
 };

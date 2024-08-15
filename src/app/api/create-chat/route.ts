@@ -1,3 +1,4 @@
+import { loadS3IntoPinecone } from '@/lib/pinecone'
 import { NextResponse } from "next/server"
 
 export async function POST(req: Request, res: Response) {
@@ -6,15 +7,14 @@ export async function POST(req: Request, res: Response) {
 
         const body = await req.json();
 
-        const { file_key, file_name } = body;
-        console.log(body)
-        return NextResponse.json({
-            message: "success"
-        });
+        const { url } = body;
+        const pages = await loadS3IntoPinecone(body.storeUrl);
+        console.log(pages)
+        return NextResponse.json({ pages });
 
 
     } catch (error) {
-        console.log(error)
+        console.log(error);
         return NextResponse.json(
             { error: "Internal server error" },
             { status: 500 }

@@ -3,14 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "set NODE_OPTIONS='--max-old-space-size=8192' && next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
     "@clerk/nextjs": "^5.3.1",
+    "@langchain/community": "^0.2.27",
     "@neondatabase/serverless": "^0.9.4",
+    "@pinecone-database/pinecone": "^3.0.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@tanstack/react-query": "^5.51.23",
     "axios": "^1.7.4",
@@ -20,8 +22,10 @@
     "drizzle-kit": "^0.24.0",
     "drizzle-orm": "^0.33.0",
     "firebase": "^10.12.5",
+    "langchain": "^0.2.16",
     "lucide-react": "^0.427.0",
     "next": "14.2.5",
+    "pdf-parse": "^1.1.1",
     "react": "^18",
     "react-dom": "^18",
     "react-dropzone": "^14.2.3",
