@@ -49,7 +49,7 @@ const ChatPage = async ({ params: { chatId } }: Props) => {
                     <PDFViewer pdf_url={currentChat?.pdfUrl || ''} />
                 </div>
                 <div className="flex-[3] border-l-4 border-l-slate-200 ">
-                    <ChatComponent />
+                    <ChatComponent chatId={parseInt(chatId)} />
                 </div>
             </div>
         </div>
