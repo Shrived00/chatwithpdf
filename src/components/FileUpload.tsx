@@ -8,22 +8,28 @@ import { ref, uploadBytesResumable, getDownloadURL, UploadTaskSnapshot } from "f
 import { useMutation } from "@tanstack/react-query";
 import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid';
+import { useRouter } from "next/navigation";
 
 const FileUpload = () => {
     const [uploading, setUploading] = useState(false);
     const [storeUrl, setStoreUrl] = useState("");
+    const router = useRouter();
 
     const { mutate, isPending } = useMutation({
         mutationFn: async ({
-            storeUrl
+            storeUrl,
+            file_key,
+            file_name
         }: {
             storeUrl: string;
+            file_key: string;
+            file_name: string;
         }) => {
             const response = await axios.post("/api/create-chat", {
-                storeUrl
+                storeUrl, file_key, file_name
             });
 
-            console.log(response.data)
+            console.log(response.data);
 
             return response.data;
         },
@@ -62,9 +68,7 @@ const FileUpload = () => {
                 await uploadTask;
 
                 const url = await getDownloadURL(ref(storage, `pdf/${file_key}_${file.name}`));
-                console.log(url);
                 setStoreUrl(url);
-                console.log(storeUrl);
 
                 toast.success("File uploaded successfully!");
 
@@ -75,11 +79,12 @@ const FileUpload = () => {
 
                 // Now that we have the URL, we can call mutate
                 mutate(
-                    { storeUrl: url },  // Use the URL directly instead of the state
+                    { storeUrl: url, file_key, file_name: file.name },  // Use the URL directly instead of the state
                     {
-                        onSuccess: ({ data }) => {
-                            console.log(data)
+                        onSuccess: ({ chat_id }) => {
+                            console.log(chat_id);
                             toast.success("Chat created!");
+                            router.push(`/chat/${chat_id}`);
                         },
                         onError: (err) => {
                             toast.error("Error creating chat");
