@@ -9,13 +9,15 @@ const PDFViewer = ({ pdf_url }: Props) => {
         //     className="w-full h-full"
         // ></iframe>
 
-        <embed
-            src={pdf_url}
-            type="application/pdf"
-            width="100%"
-            height="100%"
-            title="Embedded PDF Viewer"
-        />
+        <div className="h-full">
+            <embed
+                src={pdf_url}
+                type="application/pdf"
+                width="100%"
+                height="100%"
+                title="Embedded PDF Viewer"
+            />
+        </div>
     );
 };
 

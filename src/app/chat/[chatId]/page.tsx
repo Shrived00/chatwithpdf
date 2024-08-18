@@ -45,10 +45,10 @@ const ChatPage = async ({ params: { chatId } }: Props) => {
                 <div className="flex-[1] max-w-xs">
                     <ChatSideBar chats={_chats} chatId={parseInt(chatId)} />
                 </div>
-                <div className="max-h-screen   flex-[5]">
+                <div className="h-full   flex-[5]">
                     <PDFViewer pdf_url={currentChat?.pdfUrl || ''} />
                 </div>
-                <div className="flex-[3] border-l-4 border-l-slate-200 ">
+                <div className="flex-[3] border-l-4 border-l-slate-200 bg-[#BDE8CA] ">
                     <ChatComponent chatId={parseInt(chatId)} />
                 </div>
             </div>

@@ -3,7 +3,7 @@ import { DrizzleChat } from '@/lib/db/schema'
 import Link from 'next/link'
 import React from 'react'
 import { Button } from './ui/button'
-import { MessageCircle, PlusCircle } from 'lucide-react'
+import { ChevronLeftIcon, ChevronRightIcon, MessageCircle, PlusCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 
@@ -14,9 +14,20 @@ type Props = {
 
 const ChatSideBar = ({ chats, chatId }: Props) => {
     return (
-        <div className='w-full min-h-screen  p-4 text-gray-200 bg-gray-900'>
+        <div className='w-full h-full  p-4 text-gray-200 bg-[#0D7C66]'>
+
+
+
+
+            <Link href='/' className="inline-block ">
+                <div className="flex  gap-2 text-gray-900 bg-[#BDE8CA]  rounded-xl mb-3 pr-5 ">
+                    <ChevronLeftIcon />Home
+                </div>
+
+            </Link>
+
             <Link href='/'>
-                <Button className='w-full border-dashed border-white border'>
+                <Button className='w-full border-dashed border-white border '>
                     <PlusCircle className='mr-2 w-4 h-4' />
                     New Chat
                 </Button>
@@ -27,7 +38,7 @@ const ChatSideBar = ({ chats, chatId }: Props) => {
                     <Link href={`/chat/${chat.id}`} key={chat.id}>
 
                         <div className={cn("rounded-lg p-3 text-slate-300 flex items-center", {
-                            "bg-blue-600 text-white": chat.id == chatId,
+                            "bg-[#41B3A2] text-white": chat.id == chatId,
                             "hover:text-white": chat.id !== chatId
                         })
                         }
@@ -41,12 +52,8 @@ const ChatSideBar = ({ chats, chatId }: Props) => {
                 ))}
             </div>
 
-            <div className="absolute bottom-4 left-4">
-                <div className="flex items-center gap-2 text-sm text-slate-500 flex-wrap">
-                    <Link href='/'>Home</Link>
-                    <Link href='/'>Home</Link>
-                </div>
-            </div>
+
+
         </div>
     )
 }
