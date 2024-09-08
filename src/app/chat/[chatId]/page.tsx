@@ -1,59 +1,33 @@
-import ChatComponent from '@/components/ChatComponent';
-import ChatSideBar from '@/components/ChatSideBar';
-import PDFViewer from '@/components/PDFViewer';
-import { db } from '@/lib/db';
-import { chats } from '@/lib/db/schema';
-import { auth } from '@clerk/nextjs/server';
-import { eq } from 'drizzle-orm';
-import { redirect } from 'next/navigation';
-import { parse } from 'path';
-import React from 'react'
+import { Suspense } from 'react';
+import ChatPageContent from './ChatPageContent';
+import { getChatsData } from './chatUtils';
+import { Slab } from 'react-loading-indicators';
 
 type Props = {
     params: {
-        chatId: string,
-    }
-}
-
+        chatId: string;
+    };
+};
 
 const ChatPage = async ({ params: { chatId } }: Props) => {
-
-    const { userId } = await auth();
-    if (!userId) {
-        return redirect('/sign-in')
-    }
-
-    const _chats = await db.select().from(chats).where(eq(chats.userId, userId))
-
-    if (!_chats) {
-        return redirect('/')
-    }
-
-    if (!_chats.find((chat) => chat.id === parseInt(chatId))) {
-        return redirect('/');
-
-    }
-
-
-    const currentChat = _chats.find(chat => chat.id === parseInt(chatId))
+    // Server-side: Fetch data
+    const chatsData = await getChatsData(chatId);
 
     return (
-        <div className='flex min-h-screen '>
-            {/* Params: {params} */}
-
-            <div className="flex w-full min-h-screen ">
-                <div className="flex-[1] max-w-xs">
-                    <ChatSideBar chats={_chats} chatId={parseInt(chatId)} />
-                </div>
-                <div className="h-full   flex-[5]">
-                    <PDFViewer pdf_url={currentChat?.pdfUrl || ''} />
-                </div>
-                <div className="flex-[3] border-l-4 border-l-slate-200 bg-[#BDE8CA] ">
-                    <ChatComponent chatId={parseInt(chatId)} />
-                </div>
-            </div>
+        // Wrap the ChatPageContent in Suspense for client-side lazy loading or rendering
+        <div className="h-screen overflow-hidden ">
+            <Suspense
+                fallback={
+                    <div className="flex items-center justify-center h-screen">
+                        <Slab color="#32cd32" size="medium" text="" textColor="" />
+                    </div>
+                }
+            >
+                {/* Pass server-side data to the component */}
+                <ChatPageContent chatId={chatId} initialChatsData={chatsData} />
+            </Suspense>
         </div>
-    )
-}
+    );
+};
 
-export default ChatPage
+export default ChatPage;

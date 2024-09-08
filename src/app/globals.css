@@ -67,3 +67,11 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+
+
+/* Hide the scrollbar */
+.chat-container::-webkit-scrollbar {
+  display: none; /* Hide scrollbar in WebKit browsers (Chrome, Safari) */
+}
