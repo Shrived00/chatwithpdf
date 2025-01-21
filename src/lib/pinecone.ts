@@ -24,7 +24,6 @@ type PDFPage = {
 
 export async function loadS3IntoPinecone(url: string, fileKey: string) {
     //obtain pdf
-    console.log('downling pdf to file sys')
 
     const file_name = await downloadFromS3(url);
 
@@ -54,7 +53,6 @@ export async function loadS3IntoPinecone(url: string, fileKey: string) {
 
 
 
-    console.log("inserting vectors into pinecone");
     await namespace.upsert(vectors);
 
     return documents[0];
@@ -83,7 +81,6 @@ async function embedDocument(doc: Document) {
 
 
     } catch (error) {
-        console.log("error embedding document", error);
         throw error;
     }
 }

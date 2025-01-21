@@ -29,7 +29,6 @@ const FileUpload = () => {
                 storeUrl, file_key, file_name
             });
 
-            console.log(response.data);
 
             return response.data;
         },
@@ -59,7 +58,6 @@ const FileUpload = () => {
                         // You can use this progress value to update a progress bar if needed
                     },
                     (error) => {
-                        console.error("Upload failed:", error);
                         toast.error("Upload failed. Please try again.");
                         setUploading(false);
                     },
@@ -82,19 +80,16 @@ const FileUpload = () => {
                     { storeUrl: url, file_key, file_name: file.name },  // Use the URL directly instead of the state
                     {
                         onSuccess: ({ chat_id }) => {
-                            console.log(chat_id);
                             toast.success("Chat created!");
                             router.push(`/chat/${chat_id}`);
                         },
                         onError: (err) => {
                             toast.error("Error creating chat");
-                            console.error(err);
                         },
                     }
                 );
 
             } catch (error) {
-                console.error("Error during file upload:", error);
                 toast.error("An error occurred. Please try again.");
             } finally {
                 setUploading(false);

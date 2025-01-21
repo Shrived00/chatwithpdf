@@ -20,7 +20,6 @@ export async function getChatsData(chatId: string) {
         redirect('/');
     }
 
-    console.log(_chats);
     return _chats;
 
 }

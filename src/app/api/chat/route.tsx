@@ -22,7 +22,6 @@ export async function POST(req: Request) {
 
     const fileKey = _chats[0].fileKey;
     const lastMessage = messages[messages.length - 1];
-    console.log(lastMessage)
 
 
     let lastMessageContent: string = '';
@@ -39,7 +38,6 @@ export async function POST(req: Request) {
 
     // Fetch the context based on the last message content and fileKey
     const context = await getContext(lastMessageContent, fileKey);
-    console.log(context)
 
     // Construct the prompt as a CoreMessage object
     const prompt: CoreMessage = {

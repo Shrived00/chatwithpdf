@@ -30,7 +30,6 @@ export async function getEmbeddings(text: string): Promise<number[]> {
 
     } catch (error) {
         // More specific error handling if needed
-        console.error("Embedding error:", error);
         throw error;
     }
 }

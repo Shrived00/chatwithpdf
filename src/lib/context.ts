@@ -19,7 +19,6 @@ export async function getMatchesFromEmbeddings(
         });
         return queryResult.matches || [];
     } catch (error) {
-        console.log("error querying embeddings", error);
         throw error;
     }
 }
